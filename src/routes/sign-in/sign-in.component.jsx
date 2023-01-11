@@ -1,17 +1,20 @@
-import React from 'react';
+import { useState } from 'react';
 import { signInWithGooglePopUp, createUserDocumentFromAuth } from '../../utils/firebase/firebase.utils';
 
+import SignUpForm from '../../components/sign-up-form/sign-up-form.component';
+
 const SignIn = (props) => {
-    const signInWithGoogleHandler = async () => {
+    const logGoogleUser = async () => {
         const response = await signInWithGooglePopUp();
         const userDocRef = await createUserDocumentFromAuth(response.user);
     };
     
     return (
-        <React.Fragment>
+        <div>
             <h1>Sign In Page</h1>
-            <button onClick={signInWithGoogleHandler}>Sign In Google</button>
-        </React.Fragment>
+            <button onClick={logGoogleUser}>Sign in with Google Popup</button>
+            <SignUpForm />
+        </div>
     );
 };
 

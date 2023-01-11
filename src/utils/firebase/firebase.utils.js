@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -13,17 +13,20 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
 export const auth = getAuth(firebaseApp);
-export const signInWithGooglePopUp = () => signInWithPopup(auth, provider);
+export const signInWithGooglePopUp = () => signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
 
-export const createUserDocumentFromAuth = async (userAuth) => {
+export const createUserDocumentFromAuth = async (userAuth, additionalInformation = {}) => {
+
+    if (!userAuth) return;
     
     const userDocRef = doc(db, 'users', userAuth.uid);
 
@@ -37,7 +40,8 @@ export const createUserDocumentFromAuth = async (userAuth) => {
             await setDoc(userDocRef, {
                 displayName,
                 email,
-                createdAt
+                createdAt,
+                ...additionalInformation
             });
         } catch (error) {
             console.log('Error during save document to firebase, with: ', error.message);
@@ -46,3 +50,10 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 
     return userDocRef;
 }
+
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+
+    if (!email || !password) return;
+
+    return await createUserWithEmailAndPassword(auth, email, password);
+};
