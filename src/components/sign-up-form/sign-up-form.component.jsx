@@ -26,13 +26,11 @@ const SignUpForm = (props) => {
 
         if (password === confirmPassword) {
             try {
-                const {user: userAuth} = await createAuthUserWithEmailAndPassword(email, password);
+                const { user } = await createAuthUserWithEmailAndPassword(email, password);
 
-                const userDocRef = await createUserDocumentFromAuth(userAuth, { displayName });
+                await createUserDocumentFromAuth(user, { displayName });
 
-                if (userDocRef) {
-                    resetFormFields();
-                }
+                resetFormFields();
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
                     alert('Cannot create user, email already in used.');
