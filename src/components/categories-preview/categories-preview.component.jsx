@@ -9,7 +9,7 @@ const CategoriesPreview = () => {
         <Fragment>
             {
                 Object.keys(categoriesMap).map((title) => {
-                    const items = categoriesMap[title];
+                    const items = categoriesMap[title.toLowerCase()];
 
                     return (
                         <CategoryPreview key={title} title={title} products={items} />

@@ -1,30 +1,23 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import ProductCard from '../product-card/product-card.component';
 
-import './category-preview.styles.scss';
+import { CategoryPreviewContainer, Title, Preview } from './category-preview.styles.jsx';
 
 const CategoryPreview = ({ title, products }) => {
-    const navigate = useNavigate();
-    const {pathname} = useLocation();
-
-    const redirectCategoryPageHandler = () => {
-        navigate(`${pathname}/${title}`);
-    };
-
     return (
-        <div className='category-preview-container'>
+        <CategoryPreviewContainer>
             <h2>
-                <span className='title' onClick={redirectCategoryPageHandler}>{title}</span> 
+                <Title to={title}>{title}</Title> 
             </h2>
 
-            <div className='preview'>
+            <Preview>
                 {
                     products.filter((_, idx) => idx < 4)
                         .map((product) => <ProductCard key={product.id} product={product}/>)
                 }
-            </div>
-        </div>
+            </Preview>
+        </CategoryPreviewContainer>
     );
 };
 
